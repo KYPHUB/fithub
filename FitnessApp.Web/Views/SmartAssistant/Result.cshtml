@@ -2,9 +2,12 @@
 
 @{
     ViewData["Title"] = "Size Özel Plan";
+    var transformationImage = ViewBag.TransformationImage as string;
+    var beforeImage = ViewBag.BeforeImage as string;
 }
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -20,6 +23,55 @@
                     <div id="markdownResult" style="line-height: 1.8;">
                         <div class="text-center text-muted">Plan yükleniyor...</div>
                     </div>
+
+                    @if (!string.IsNullOrEmpty(transformationImage))
+                    {
+                        <hr class="my-5">
+                        
+                        <!-- AI Dönüşüm Simülasyonu -->
+                        <div class="card border-success shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-stars me-2"></i>AI Dönüşüm Simülasyonu
+                                </h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="text-muted mb-4">Bu programı uyguladığınızda olası görünümünüz:</p>
+                                
+                                <div class="row justify-content-center align-items-center">
+                                    @if (!string.IsNullOrEmpty(beforeImage))
+                                    {
+                                        <div class="col-md-5 text-center mb-3">
+                                            <div class="position-relative">
+                                                <img src="@beforeImage" alt="Önceki Görünüm" class="img-fluid rounded shadow" 
+                                                     style="max-height: 350px; object-fit: cover;"
+                                                     onerror="this.parentElement.innerHTML='<div class=\'bg-secondary text-white p-5 rounded\'>Önce resmi bulunamadı</div>'">
+                                                <span class="badge bg-secondary position-absolute top-0 start-0 m-2 fs-6">ŞİMDİ</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-2 text-center mb-3">
+                                            <i class="bi bi-arrow-right text-success" style="font-size: 3rem;"></i>
+                                        </div>
+                                    }
+                                    
+                                    <div class="col-md-5 text-center mb-3">
+                                        <div class="position-relative">
+                                            <img src="@transformationImage" alt="Dönüşüm Sonucu" class="img-fluid rounded shadow" 
+                                                 style="max-height: 350px; object-fit: cover;"
+                                                 onerror="this.parentElement.innerHTML='<div class=\'bg-secondary text-white p-5 rounded\'>Sonra resmi bulunamadı</div>'">
+                                            <span class="badge bg-success position-absolute top-0 start-0 m-2 fs-6">HEDEF</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info mt-4 mb-0">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <small>Bu görsel, yapay zeka tarafından oluşturulmuş tahmini bir simülasyondur. Gerçek sonuçlar kişiden kişiye farklılık gösterebilir.</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
 
                 </div>
                 <div class="card-footer text-center">
@@ -41,9 +93,9 @@
             
             var htmlContent = marked.parse(rawText);
             
- 
+            // XSS koruması: DOMPurify ile sanitize et
             var resultDiv = document.getElementById("markdownResult");
-            resultDiv.innerHTML = htmlContent;
+            resultDiv.innerHTML = DOMPurify.sanitize(htmlContent);
 
 
             var tables = resultDiv.getElementsByTagName("table");

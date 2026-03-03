@@ -6,14 +6,14 @@ public class Appointment
 {
     public int Id { get; set; }
 
-    public string MemberId { get; set; }
-    public AppUser Member { get; set; }
+    public string MemberId { get; set; } = string.Empty;
+    public AppUser? Member { get; set; }
 
     public int TrainerId { get; set; }
-    public Trainer Trainer { get; set; }
+    public Trainer? Trainer { get; set; }
 
     public int ServiceId { get; set; }
-    public Service Service { get; set; }
+    public Service? Service { get; set; }
 
     public DateTime Date { get; set; }
     public TimeSpan StartTime { get; set; }

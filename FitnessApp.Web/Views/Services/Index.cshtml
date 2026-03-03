@@ -2,29 +2,124 @@
 
 @{
     ViewData["Title"] = "Hizmetlerimiz";
+    
+    // Service icons based on name
+    var serviceIcons = new Dictionary<string, string> {
+        { "Boks", "bi-hand-index-thumb-fill" },
+        { "Muay Thai", "bi-lightning-fill" },
+        { "Brazilian Jiu-Jitsu", "bi-diagram-3-fill" },
+        { "Güreş", "bi-people-fill" },
+        { "Sambo", "bi-shield-fill" },
+        { "Kickboks", "bi-bullseye" },
+        { "MMA", "bi-trophy-fill" }
+    };
+    
+    var serviceColors = new[] { "#dc3545", "#fd7e14", "#6f42c1", "#28a745", "#0d6efd", "#20c997", "#e83e8c" };
 }
 
-<div class="container py-5">
-    <h1 class="text-center mb-5">Hizmetlerimiz</h1>
+<!-- Page Header -->
+<div class="position-relative overflow-hidden" style="background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #16213e 100%);">
+    <div class="container py-5 text-center position-relative" style="z-index: 2;">
+        <h1 class="text-white display-4 fw-bold animate-fade-up" style="font-family: 'Teko', sans-serif; letter-spacing: 3px;">
+            <i class="bi bi-stars text-warning me-3"></i>DÖVÜŞ SANATLARI
+        </h1>
+        <p class="text-white-50 lead mt-3 animate-fade-up delay-1">
+            Her seviyeye uygun profesyonel eğitim programları
+        </p>
+    </div>
+    <!-- Decorative Elements -->
+    <div class="position-absolute" style="top: 20%; right: 10%; opacity: 0.1;">
+        <i class="bi bi-hand-index-thumb text-warning" style="font-size: 8rem;"></i>
+    </div>
+    <div class="position-absolute" style="bottom: 10%; left: 5%; opacity: 0.1;">
+        <i class="bi bi-lightning text-warning" style="font-size: 6rem;"></i>
+    </div>
+</div>
 
+<div class="container py-5">
     <div class="row row-cols-1 row-cols-md-2 g-4">
+        @{ int index = 0; }
         @foreach (var item in Model)
         {
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0 bg-light">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h3 class="card-title text-primary">@item.Name</h3>
-                            <span class="badge bg-success fs-5">@item.Price.ToString("C2")</span>
+            var icon = serviceIcons.ContainsKey(item.Name) ? serviceIcons[item.Name] : "bi-star-fill";
+            var color = serviceColors[index % serviceColors.Length];
+            
+            <div class="col animate-fade-up" style="animation-delay: @(index * 0.1)s;">
+                <div class="card service-card h-100 border-0 shadow-lg p-4 position-relative overflow-hidden" 
+                     style="border-left: 5px solid @color !important;">
+                    
+                    <!-- Icon Badge -->
+                    <div class="position-absolute" style="top: -20px; right: 20px;">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-lg" 
+                             style="width: 70px; height: 70px; background: @color;">
+                            <i class="bi @icon text-white fs-2"></i>
                         </div>
-                        <p class="card-text lead">@item.Description</p>
-                        <div class="d-flex align-items-center text-muted">
-                            <i class="bi bi-clock me-2"></i>
-                            <span>Süre: @item.DurationMinutes dakika</span>
+                    </div>
+                    
+                    <div class="card-body pt-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h3 class="card-title fw-bold mb-1" style="color: @color; font-family: 'Teko', sans-serif; font-size: 2rem;">
+                                    @item.Name
+                                </h3>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="bi bi-clock me-1"></i>
+                                    <span>@item.DurationMinutes dakika</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="price-tag fs-4 fw-bold px-3 py-2 rounded-pill shadow" 
+                                      style="background: linear-gradient(135deg, @color, @(color)dd);">
+                                    @item.Price.ToString("C0")
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <p class="card-text text-secondary mt-3" style="line-height: 1.8;">
+                            @item.Description
+                        </p>
+                        
+                        <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-check-circle text-success me-1"></i>Başlangıç
+                                </span>
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-check-circle text-success me-1"></i>İleri
+                                </span>
+                            </div>
+                            <a asp-controller="Trainers" asp-action="Index" asp-route-serviceId="@item.Id" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                                <i class="bi bi-arrow-right me-1"></i>Antrenör Seç
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+            index++;
         }
     </div>
+    
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="icon-box bg-light text-secondary mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                <i class="bi bi-inbox fs-1"></i>
+            </div>
+            <h4 class="text-muted">Henüz kayıtlı hizmet bulunmuyor</h4>
+            <p class="text-secondary">Admin panelinden hizmet ekleyebilirsiniz.</p>
+        </div>
+    }
 </div>
+
+<style>
+    .service-card {
+        transition: all 0.4s ease;
+    }
+    .service-card:hover {
+        transform: translateY(-10px) scale(1.02);
+    }
+    .service-card .price-tag {
+        color: white;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+</style>

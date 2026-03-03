@@ -1,3 +1,4 @@
+    using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FitnessApp.Web.Data;
@@ -6,6 +7,7 @@ namespace FitnessApp.Web.Controllers.Api;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TrainersController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -15,7 +17,7 @@ public class TrainersController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Trainers
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<object>>> GetTrainers()
     {
@@ -33,7 +35,7 @@ public class TrainersController : ControllerBase
         return Ok(trainers);
     }
 
-    // GET: api/Trainers/filter?date=2025-12-01
+    
     [HttpGet("filter")]
     public async Task<ActionResult<IEnumerable<object>>> FilterTrainers(DateTime? date)
     {

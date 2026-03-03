@@ -36,14 +36,34 @@ public class TrainerController : Controller
         ModelState.Remove("Specialties");
         if (ModelState.IsValid)
         {
-            // Fotoğraf Yükleme
+            
             if (photoFile != null)
             {
+                // Güvenlik: Dosya uzantısı ve boyut kontrolü
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                string extension = Path.GetExtension(photoFile.FileName).ToLower();
+                
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("photoFile", "Sadece resim dosyaları yüklenebilir (jpg, png, webp).");
+                    ViewBag.Services = await _context.Services.ToListAsync();
+                    return View(trainer);
+                }
+                
+                if (photoFile.Length > 5 * 1024 * 1024) // 5 MB sınırı
+                {
+                    ModelState.AddModelError("photoFile", "Dosya boyutu 5 MB'dan büyük olamaz.");
+                    ViewBag.Services = await _context.Services.ToListAsync();
+                    return View(trainer);
+                }
+
                 string wwwRootPath = _hostEnvironment.WebRootPath;
                 string fileName = Path.GetFileNameWithoutExtension(photoFile.FileName);
-                string extension = Path.GetExtension(photoFile.FileName);
                 fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                string path = Path.Combine(wwwRootPath + "/images/trainers/", fileName);
+                string path = Path.Combine(wwwRootPath, "images", "trainers", fileName);
+                
+                // Klasör yoksa oluştur
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
                 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
@@ -52,7 +72,7 @@ public class TrainerController : Controller
                 trainer.PhotoUrl = "/images/trainers/" + fileName;
             }
 
-            // Uzmanlık Alanları (Services) Ekleme
+      
             if (selectedServices != null)
             {
                 foreach (var serviceId in selectedServices)
@@ -104,19 +124,36 @@ public class TrainerController : Controller
 
                 if (existingTrainer == null) return NotFound();
 
-                // Bilgileri güncelle
+                
                 existingTrainer.FullName = trainer.FullName;
                 existingTrainer.Bio = trainer.Bio;
 
-                // Fotoğraf güncelleme
                 if (photoFile != null)
                 {
-                    // Eski fotoğrafı sil (opsiyonel, şimdilik kalsın)
+                    // Güvenlik: Dosya uzantısı ve boyut kontrolü
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                    string extension = Path.GetExtension(photoFile.FileName).ToLower();
+                    
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("photoFile", "Sadece resim dosyaları yüklenebilir (jpg, png, webp).");
+                        ViewBag.Services = await _context.Services.ToListAsync();
+                        return View(trainer);
+                    }
+                    
+                    if (photoFile.Length > 5 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("photoFile", "Dosya boyutu 5 MB'dan büyük olamaz.");
+                        ViewBag.Services = await _context.Services.ToListAsync();
+                        return View(trainer);
+                    }
+
                     string wwwRootPath = _hostEnvironment.WebRootPath;
                     string fileName = Path.GetFileNameWithoutExtension(photoFile.FileName);
-                    string extension = Path.GetExtension(photoFile.FileName);
                     fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    string path = Path.Combine(wwwRootPath + "/images/trainers/", fileName);
+                    string path = Path.Combine(wwwRootPath, "images", "trainers", fileName);
+
+                    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {

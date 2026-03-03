@@ -38,8 +38,8 @@ public class AppointmentsController : ControllerBase
                 a.Id,
                 Date = a.Date.ToString("yyyy-MM-dd"),
                 Time = $"{a.StartTime:hh\\:mm} - {a.EndTime:hh\\:mm}",
-                TrainerName = a.Trainer.FullName,
-                ServiceName = a.Service.Name,
+                TrainerName = a.Trainer != null ? a.Trainer.FullName : "",
+                ServiceName = a.Service != null ? a.Service.Name : "",
                 Status = a.Status.ToString()
             })
             .ToListAsync();

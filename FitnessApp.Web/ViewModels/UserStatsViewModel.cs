@@ -20,8 +20,11 @@ public class UserStatsViewModel
     public string Gender { get; set; } = "Erkek";
 
     [Required(ErrorMessage = "Hedef seçimi zorunludur.")]
-    public string Goal { get; set; } = "Kilo Verme"; // Kilo Verme, Kas Kazanma, Form Koruma
+    public string Goal { get; set; } = "Kilo Verme"; 
 
     [Required(ErrorMessage = "Aktivite seviyesi zorunludur.")]
-    public string ActivityLevel { get; set; } = "Orta"; // Düşük, Orta, Yüksek
+    public string ActivityLevel { get; set; } = "Orta";
+
+    // Opsiyonel: Kullanıcının seçtiği fotoğraf (dönüşüm simülasyonu için)
+    public int? SelectedImageId { get; set; }
 }

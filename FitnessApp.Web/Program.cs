@@ -13,35 +13,28 @@ builder.Services.AddDbContext<FitnessApp.Web.Data.ApplicationDbContext>(options 
 builder.Services.AddIdentity<FitnessApp.Web.Data.AppUser, Microsoft.AspNetCore.Identity.IdentityRole>(options => 
 {
     options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = false;
+    options.Password.RequireDigit = true;
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 3; // "sau" is 3 chars
+    options.Password.RequiredLength = 6;
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 })
     .AddEntityFrameworkStores<FitnessApp.Web.Data.ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-    builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => 
-        policy.RequireAssertion(context => 
-            context.User.IsInRole("Admin") || 
-            (context.User.Identity?.Name?.Contains("sakarya.edu.tr") == true)
-        ));
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<AppointmentService>();
-builder.Services.AddScoped<IAIService, GeminiService>();
+builder.Services.AddHttpClient<IAIService, GeminiService>();
 
-// API Documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Veri tohumlama (Seeding)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -71,7 +64,7 @@ var localizationOptions = new RequestLocalizationOptions()
 
 app.UseRequestLocalization(localizationOptions);
 
-// CRITICAL FIX: Add authentication middleware BEFORE authorization
+// CRITICAL: Authentication middleware must be BEFORE authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

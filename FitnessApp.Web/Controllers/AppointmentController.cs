@@ -110,7 +110,7 @@ public class AppointmentController : Controller
             {
                 TrainerId = model.TrainerId,
                 ServiceId = model.ServiceId,
-                MemberId = userId,
+                MemberId = userId ?? string.Empty,
                 Date = model.Date,
                 StartTime = model.StartTime,
                 EndTime = model.StartTime.Add(TimeSpan.FromMinutes(model.ServiceDuration)),

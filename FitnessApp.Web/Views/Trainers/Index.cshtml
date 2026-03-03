@@ -2,51 +2,159 @@
 
 @{
     ViewData["Title"] = "Antrenörlerimiz";
+    var filteredServiceName = ViewBag.FilteredServiceName as string;
+    var filteredServiceId = ViewBag.FilteredServiceId as int?;
+    var isAdmin = User.IsInRole("Admin");
 }
 
-<div class="container py-5">
-    <h1 class="text-center mb-5">Uzman Antrenör Kadromuz</h1>
-    
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+<!-- Page Header -->
+<div class="bg-dark py-5 mb-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+    <div class="container text-center">
+        <h1 class="text-white display-4 fw-bold animate-fade-up" style="font-family: 'Teko', sans-serif; letter-spacing: 3px;">
+            <i class="bi bi-trophy-fill text-warning me-3"></i>
+            @if (!string.IsNullOrEmpty(filteredServiceName))
+            {
+                <span>@filteredServiceName.ToUpper() ANTRENÖRLER</span>
+            }
+            else
+            {
+                <span>UZMAN ANTRENÖR KADROMUZ</span>
+            }
+        </h1>
+        <p class="text-white-50 lead mt-3 animate-fade-up delay-1">
+            @if (!string.IsNullOrEmpty(filteredServiceName))
+            {
+                <span><i class="bi bi-funnel-fill me-2"></i>@filteredServiceName hizmeti veren antrenörler listeleniyor</span>
+            }
+            else
+            {
+                <span>Dünya çapında tanınan dövüş sanatları ustaları ile çalışın</span>
+            }
+        </p>
+        
+        @if (!string.IsNullOrEmpty(filteredServiceName))
+        {
+            <div class="mt-4 animate-fade-up delay-2">
+                <a asp-controller="Trainers" asp-action="Index" class="btn btn-outline-light rounded-pill px-4">
+                    <i class="bi bi-x-circle me-2"></i>Filtreyi Kaldır - Tümünü Göster
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center gap-2 mt-4 animate-fade-up delay-2">
+                <span class="badge bg-danger px-3 py-2"><i class="bi bi-fire me-1"></i> UFC Şampiyonları</span>
+                <span class="badge bg-warning text-dark px-3 py-2"><i class="bi bi-award me-1"></i> Dünya Sınıfı Eğitim</span>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         @foreach (var item in Model)
         {
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    @if (!string.IsNullOrEmpty(item.PhotoUrl))
-                    {
-                        <img src="@item.PhotoUrl" class="card-img-top" alt="@item.FullName" style="height: 300px; object-fit: cover;">
-                    }
-                    else
-                    {
-                        <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 300px;">
-                            <span>Fotoğraf Yok</span>
+            <div class="col animate-fade-up">
+                <div class="card trainer-card h-100 border-0 shadow-lg overflow-hidden">
+                    <!-- Image Wrapper -->
+                    <div class="card-img-wrapper position-relative" style="height: 280px; overflow: hidden;">
+                        @if (!string.IsNullOrEmpty(item.PhotoUrl))
+                        {
+                            <img src="@item.PhotoUrl" class="w-100 h-100" alt="@item.FullName" style="object-fit: cover; transition: transform 0.5s ease;">
+                        }
+                        else
+                        {
+                            <div class="w-100 h-100 bg-gradient d-flex align-items-center justify-content-center" 
+                                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="bi bi-person-fill text-white" style="font-size: 5rem;"></i>
+                            </div>
+                        }
+                        <!-- Gradient Overlay -->
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" 
+                             style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                            <h4 class="text-white mb-0 fw-bold">@item.FullName</h4>
                         </div>
-                    }
+                    </div>
+                    
                     <div class="card-body">
-                        <h5 class="card-title">@item.FullName</h5>
-                        
-                        <!-- Specialization Areas Display -->
-                        <div class="mb-3">
+                        <!-- Specialties -->
+                        <div class="mb-3 d-flex flex-wrap gap-2">
                             @if (item.Specialties != null && item.Specialties.Any())
                             {
                                 @foreach (var specialty in item.Specialties)
                                 {
-                                    <span class="badge bg-primary me-1">@specialty.Name</span>
+                                    var colors = new[] { "#dc3545", "#28a745", "#007bff", "#6f42c1", "#fd7e14", "#20c997" };
+                                    var colorIndex = specialty.Id % colors.Length;
+                                    var isFiltered = filteredServiceId.HasValue && specialty.Id == filteredServiceId.Value;
+                                    <span class="badge px-3 py-2 @(isFiltered ? "border border-warning border-2" : "")" style="background: @colors[colorIndex];">
+                                        <i class="bi bi-lightning-fill me-1"></i>@specialty.Name
+                                        @if (isFiltered)
+                                        {
+                                            <i class="bi bi-check-circle-fill ms-1"></i>
+                                        }
+                                    </span>
                                 }
                             }
-                            else
-                            {
-                                <span class="text-muted small">Uzmanlık alanı belirtilmemiş</span>
-                            }
                         </div>
-
-                        <p class="card-text text-truncate">@item.Bio</p>
+                        
+                        <!-- Bio -->
+                        <p class="card-text text-muted" style="line-height: 1.6;">
+                            @(item.Bio?.Length > 120 ? item.Bio.Substring(0, 120) + "..." : item.Bio)
+                        </p>
                     </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary w-100">Profili İncele</a>
+                    
+                    <div class="card-footer bg-transparent border-0 p-3">
+                        @if (!isAdmin)
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" asp-route-serviceId="@filteredServiceId"
+                               class="btn btn-warning w-100 fw-bold py-2 rounded-pill hover-glow">
+                                <i class="bi bi-person-lines-fill me-2"></i>Profili İncele & Randevu Al
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" 
+                               class="btn btn-secondary w-100 fw-bold py-2 rounded-pill">
+                                <i class="bi bi-person-lines-fill me-2"></i>Profili İncele
+                            </a>
+                        }
                     </div>
                 </div>
             </div>
         }
     </div>
+    
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="icon-box bg-light text-secondary mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                <i class="bi bi-person-x fs-1"></i>
+            </div>
+            @if (!string.IsNullOrEmpty(filteredServiceName))
+            {
+                <h4 class="text-muted">@filteredServiceName hizmeti için kayıtlı antrenör bulunmuyor</h4>
+                <p class="text-secondary">Başka bir hizmet seçebilir veya tüm antrenörleri görüntüleyebilirsiniz.</p>
+                <a asp-controller="Trainers" asp-action="Index" class="btn btn-warning rounded-pill px-4 mt-3">
+                    <i class="bi bi-people me-2"></i>Tüm Antrenörleri Göster
+                </a>
+            }
+            else
+            {
+                <h4 class="text-muted">Henüz kayıtlı antrenör bulunmuyor</h4>
+                <p class="text-secondary">Admin panelinden antrenör ekleyebilirsiniz.</p>
+            }
+        </div>
+    }
 </div>
+
+<style>
+    .trainer-card:hover img {
+        transform: scale(1.15);
+    }
+    .trainer-card .badge {
+        transition: all 0.3s ease;
+    }
+    .trainer-card:hover .badge {
+        transform: translateY(-2px);
+    }
+</style>

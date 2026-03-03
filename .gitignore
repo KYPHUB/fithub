@@ -397,3 +397,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 FitnessApp.Web/appsettings.Development.json
+
+# Gemini / AI tool files
+.gemini/

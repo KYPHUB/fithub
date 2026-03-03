@@ -1,75 +1,207 @@
 @model FitnessApp.Web.ViewModels.UserStatsViewModel
 
 @{
-    ViewData["Title"] = "Akıllı Asistan";
+    ViewData["Title"] = "Yapay Zeka Asistanı";
 }
+
+<!-- Futuristic Header -->
+<div class="position-relative overflow-hidden" style="background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);">
+    <!-- Animated Background -->
+    <div class="position-absolute w-100 h-100" style="opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"%23ffc107\" fill=\"none\" stroke-width=\"0.5\"/><circle cx=\"50\" cy=\"50\" r=\"30\" stroke=\"%23ffc107\" fill=\"none\" stroke-width=\"0.5\"/><circle cx=\"50\" cy=\"50\" r=\"20\" stroke=\"%23ffc107\" fill=\"none\" stroke-width=\"0.5\"/></svg>'); background-size: 200px;"></div>
+    
+    <div class="container py-5 text-center position-relative" style="z-index: 2;">
+        <div class="animate-float mb-4">
+            <div class="d-inline-block p-4 rounded-circle" style="background: linear-gradient(135deg, rgba(255,193,7,0.2), rgba(255,193,7,0.05)); border: 2px solid rgba(255,193,7,0.3);">
+                <i class="bi bi-robot text-warning" style="font-size: 4rem;"></i>
+            </div>
+        </div>
+        <h1 class="text-white display-4 fw-bold animate-fade-up" style="font-family: 'Teko', sans-serif; letter-spacing: 3px;">
+            YAPAY ZEKA <span class="text-warning">ASİSTANI</span>
+        </h1>
+        <p class="text-white-50 lead mt-3 animate-fade-up delay-1" style="max-width: 600px; margin: 0 auto;">
+            <i class="bi bi-stars text-warning me-2"></i>
+            Google Gemini AI ile kişiselleştirilmiş fitness ve beslenme planı oluştur
+        </p>
+    </div>
+</div>
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-info text-white">
-                    <h3 class="mb-0">🤖 Yapay Zeka Fitness Asistanı</h3>
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 20px;">
+                <!-- Card Header -->
+                <div class="card-header py-4 text-center text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-clipboard-data me-2"></i>Vücut Bilgilerinizi Girin
+                    </h4>
                 </div>
-                <div class="card-body">
-                    <p class="lead">Vücut ölçülerinizi ve hedefinizi girin, size özel beslenme ve antrenman programı oluşturalım.</p>
-                    
-                    <form asp-action="Generate" method="post">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Age" class="form-label">Yaş</label>
-                                <input asp-for="Age" class="form-control" type="number" data-val="false" />
-                                <span asp-validation-for="Age" class="text-danger"></span>
+                
+                <div class="card-body p-4 p-md-5" style="background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);">
+                    <form asp-action="Generate" method="post" enctype="multipart/form-data">
+                        
+                        <!-- Row 1: Age & Gender -->
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Age" class="form-control form-control-lg" type="number" placeholder="Yaş" data-val="false" style="border-radius: 12px;" />
+                                    <label asp-for="Age" class="text-muted">
+                                        <i class="bi bi-calendar3 text-primary me-2"></i>Yaşınız
+                                    </label>
+                                    <span asp-validation-for="Age" class="text-danger small"></span>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Gender" class="form-label">Cinsiyet</label>
-                                <select asp-for="Gender" class="form-select">
-                                    <option value="Erkek">Erkek</option>
-                                    <option value="Kadın">Kadın</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Weight" class="form-label">Kilo (kg)</label>
-                                <input asp-for="Weight" class="form-control" type="text" placeholder="Örn: 80,5" data-val="false" />
-                                <span asp-validation-for="Weight" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Height" class="form-label">Boy (cm)</label>
-                                <input asp-for="Height" class="form-control" type="text" placeholder="Örn: 180" data-val="false" />
-                                <span asp-validation-for="Height" class="text-danger"></span>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Gender" class="form-select form-select-lg" style="border-radius: 12px;">
+                                        <option value="Erkek">Erkek</option>
+                                        <option value="Kadın">Kadın</option>
+                                    </select>
+                                    <label asp-for="Gender" class="text-muted">
+                                        <i class="bi bi-gender-ambiguous text-primary me-2"></i>Cinsiyet
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Goal" class="form-label">Hedefiniz</label>
-                            <select asp-for="Goal" class="form-select">
-                                <option value="Kilo Verme">Kilo Verme (Yağ Yakımı)</option>
-                                <option value="Kas Kazanma">Kas Kazanma (Hacim)</option>
-                                <option value="Form Koruma">Form Koruma</option>
-                            </select>
+                        <!-- Row 2: Weight & Height -->
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Weight" class="form-control form-control-lg" type="text" placeholder="Kilo" data-val="false" style="border-radius: 12px;" />
+                                    <label asp-for="Weight" class="text-muted">
+                                        <i class="bi bi-speedometer text-success me-2"></i>Kilo (kg)
+                                    </label>
+                                    <span asp-validation-for="Weight" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Height" class="form-control form-control-lg" type="text" placeholder="Boy" data-val="false" style="border-radius: 12px;" />
+                                    <label asp-for="Height" class="text-muted">
+                                        <i class="bi bi-rulers text-info me-2"></i>Boy (cm)
+                                    </label>
+                                    <span asp-validation-for="Height" class="text-danger small"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="ActivityLevel" class="form-label">Aktivite Seviyesi</label>
-                            <select asp-for="ActivityLevel" class="form-select">
-                                <option value="Düşük">Düşük (Hareketsiz)</option>
-                                <option value="Orta">Orta (Haftada 1-3 gün spor)</option>
-                                <option value="Yüksek">Yüksek (Haftada 4+ gün spor)</option>
-                            </select>
+                        <!-- Row 3: Goal -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-3">
+                                <i class="bi bi-bullseye text-danger me-2"></i>Hedefiniz Nedir?
+                            </label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="Goal" id="goal1" value="Kilo Verme" checked>
+                                    <label class="btn btn-outline-danger w-100 py-3 rounded-3" for="goal1">
+                                        <i class="bi bi-fire d-block fs-3 mb-2"></i>
+                                        <span class="fw-bold">Kilo Verme</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="Goal" id="goal2" value="Kas Kazanma">
+                                    <label class="btn btn-outline-success w-100 py-3 rounded-3" for="goal2">
+                                        <i class="bi bi-lightning-fill d-block fs-3 mb-2"></i>
+                                        <span class="fw-bold">Kas Kazanma</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="Goal" id="goal3" value="Form Koruma">
+                                    <label class="btn btn-outline-primary w-100 py-3 rounded-3" for="goal3">
+                                        <i class="bi bi-heart-pulse-fill d-block fs-3 mb-2"></i>
+                                        <span class="fw-bold">Form Koruma</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-info btn-lg text-white">Plan Oluştur ✨</button>
+                        <!-- Row 4: Activity Level -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-3">
+                                <i class="bi bi-activity text-warning me-2"></i>Aktivite Seviyeniz
+                            </label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="ActivityLevel" id="act1" value="Düşük">
+                                    <label class="btn btn-outline-secondary w-100 py-3 rounded-3" for="act1">
+                                        <i class="bi bi-emoji-neutral d-block fs-3 mb-2"></i>
+                                        <span class="fw-bold">Düşük</span>
+                                        <small class="d-block text-muted">Hareketsiz</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="ActivityLevel" id="act2" value="Orta" checked>
+                                    <label class="btn btn-outline-warning w-100 py-3 rounded-3" for="act2">
+                                        <i class="bi bi-emoji-smile d-block fs-3 mb-2"></i>
+                                        <span class="fw-bold">Orta</span>
+                                        <small class="d-block text-muted">1-3 gün/hafta</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="ActivityLevel" id="act3" value="Yüksek">
+                                    <label class="btn btn-outline-success w-100 py-3 rounded-3" for="act3">
+                                        <i class="bi bi-emoji-laughing d-block fs-3 mb-2"></i>
+                                        <span class="fw-bold">Yüksek</span>
+                                        <small class="d-block text-muted">4+ gün/hafta</small>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Row 5: Opsiyonel Fotoğraf Yükleme (Dönüşüm Simülasyonu) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-3">
+                                <i class="bi bi-camera text-info me-2"></i>Fotoğrafınızı Yükleyin (Opsiyonel)
+                                <small class="text-muted fw-normal d-block mt-1">AI, yüklediğiniz fotoğrafa göre dönüşüm simülasyonu oluşturacak</small>
+                            </label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="file" class="form-control form-control-lg" name="UserPhoto" id="userPhoto" 
+                                           accept="image/*" style="border-radius: 12px;">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Desteklenen formatlar: JPG, PNG (before_1.jpg, before_2.jpg vb. isimli dosyalar önerilir)
+                                    </small>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                                    <div id="imagePreview" class="text-center" style="display:none;">
+                                        <img id="previewImg" src="" alt="Önizleme" class="img-thumbnail" style="max-height: 100px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-lg py-3 fw-bold text-white rounded-pill shadow-lg" 
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 1.2rem;">
+                                <i class="bi bi-magic me-2"></i>Yapay Zeka ile Plan Oluştur
+                                <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-center text-muted small mt-3">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Google Gemini AI tarafından desteklenmektedir
+                        </p>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .btn-check:checked + .btn-outline-danger { background: #dc3545; color: white; }
+    .btn-check:checked + .btn-outline-success { background: #28a745; color: white; }
+    .btn-check:checked + .btn-outline-primary { background: #007bff; color: white; }
+    .btn-check:checked + .btn-outline-secondary { background: #6c757d; color: white; }
+    .btn-check:checked + .btn-outline-warning { background: #ffc107; color: #000; }
+    .form-floating > .form-control:focus, .form-floating > .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+</style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -10,17 +10,16 @@ public class GeminiService : IAIService
     private readonly HttpClient _httpClient;
     private readonly ILogger<GeminiService> _logger;
 
-    public GeminiService(IConfiguration configuration, ILogger<GeminiService> logger)
+    public GeminiService(HttpClient httpClient, IConfiguration configuration, ILogger<GeminiService> logger)
     {
         _apiKey = configuration["Gemini:ApiKey"];
-        _httpClient = new HttpClient();
+        _httpClient = httpClient;
         _logger = logger;
     }
 
     public async Task<string> GeneratePlanAsync(UserStatsViewModel stats)
     {
-        // Eğer API Key yoksa veya varsayılan değerse Mock data dön
-        if (string.IsNullOrEmpty(_apiKey) || _apiKey == "YOUR_GEMINI_API_KEY_HERE")
+        if (string.IsNullOrEmpty(_apiKey) || _apiKey == "YOUR_GEMINI_API_KEY_HERE" || _apiKey == "USER-SECRETS-OR-ENV-VARIABLE")
         {
             _logger.LogWarning("Gemini API anahtarı yapılandırılmamış. Mock plan döndürülüyor.");
             return GenerateMockPlan(stats);
@@ -79,7 +78,7 @@ Yanıtı Markdown formatında ver.";
         var json = JsonSerializer.Serialize(requestBody);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={_apiKey}";
+        var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={_apiKey}";
         var response = await _httpClient.PostAsync(url, content);
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -89,7 +88,6 @@ Yanıtı Markdown formatında ver.";
             throw new HttpRequestException($"Gemini API error: {response.StatusCode}");
         }
 
-        // Parse response
         using var doc = JsonDocument.Parse(responseBody);
         var root = doc.RootElement;
         

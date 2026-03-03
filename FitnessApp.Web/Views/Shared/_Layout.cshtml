@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Fitness Center</title>
+    <title>@ViewData["Title"] - FitHub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
@@ -16,7 +16,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary box-shadow py-3" style="z-index: 10;">
             <div class="container">
                 <a class="navbar-brand fw-bold text-uppercase fs-3 text-warning" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-activity"></i> SAU FITNESS
+                    <i class="bi bi-activity"></i> FITHUB
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +29,7 @@
                         <li class="nav-item"><a class="nav-link text-white mx-2" asp-area="" asp-controller="Trainers" asp-action="Index">Antrenörler</a></li>
 
                         @* ADMIN MENÜSÜ *@
-                        @if (User.IsInRole("Admin") || (User.Identity?.Name?.Contains("sakarya.edu.tr") == true))
+                        @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown ms-lg-3">
                                 <a class="nav-link dropdown-toggle btn btn-outline-danger text-light px-3" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,7 +75,7 @@
 
     <footer class="border-top footer text-muted bg-dark mt-auto py-4">
         <div class="container text-center text-secondary">
-            &copy; 2025 - SAU Fitness Center - Tüm Hakları Saklıdır
+            &copy; @DateTime.Now.Year - FitHub - Tüm Hakları Saklıdır
         </div>
     </footer>
     

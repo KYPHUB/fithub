@@ -7,9 +7,9 @@ public class Service
     public int Id { get; set; }
 
     [Required(ErrorMessage = "Hizmet adı zorunludur.")]
-    public string Name { get; set; } // Yoga, Pilates, Fitness
+    public string Name { get; set; } = string.Empty;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     
     [Range(15, 180, ErrorMessage = "Süre 15 ile 180 dakika arasında olmalıdır.")]
     public int DurationMinutes { get; set; } // Dakika cinsinden süre
