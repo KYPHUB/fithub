@@ -1,117 +1,117 @@
-# 🏋️ FitHub — Spor Salonu Yönetim Sistemi
+# 🏋️ FitHub — Gym Management System
 
-Kapsamlı bir **Spor Salonu Yönetim ve Randevu Sistemi**. ASP.NET Core MVC mimarisi kullanılarak, Entity Framework Core ile veritabanı yönetimi ve Identity kütüphanesi ile kullanıcı yetkilendirmesi sağlanmıştır.
+A comprehensive **Gym Management and Appointment System**. Developed using ASP.NET Core MVC architecture, database management with Entity Framework Core, and user authorization provided by the Identity library.
 
-## 🚀 Özellikler
+## 🚀 Features
 
-### 👤 Üye Paneli
-- **Kayıt & Giriş:** Güvenli üyelik sistemi.
-- **Randevu Alma:** Eğitmenlerin müsaitlik durumuna göre dinamik randevu oluşturma.
-- **Randevu Geçmişi:** Bekleyen, onaylanan ve geçmiş randevuları görüntüleme ve iptal etme.
-- **Akıllı Asistan (AI):** Google Gemini AI ile kişiselleştirilmiş egzersiz/diyet programı oluşturma.
-- **Eğitmen & Hizmet İnceleme:** Detaylı eğitmen profilleri ve hizmet açıklamaları.
+### 👤 Member Panel
+- **Registration & Login:** Secure membership system.
+- **Booking Appointments:** Dynamic appointment creation based on trainers' availability.
+- **Appointment History:** View and cancel pending, approved, and past appointments.
+- **Smart Assistant (AI):** Personalized workout/diet plan generation with Google Gemini AI.
+- **Trainer & Service Review:** Detailed trainer profiles and service descriptions.
 
-### 🛠 Yönetici (Admin) Paneli
-- **Dashboard:** Genel istatistikler ve hızlı erişim.
-- **Salon & Hizmet Yönetimi:** Salon bilgileri ve hizmet kategorilerinin CRUD işlemleri.
-- **Eğitmen Yönetimi:** Eğitmen ekleme, fotoğraf yükleme ve uzmanlık alanı atama.
-- **Çalışma Saatleri:** Eğitmenler için haftalık çalışma programı ve çakışma kontrolü.
-- **Randevu Onayı:** Üyelerden gelen randevu taleplerini onaylama veya reddetme.
+### 🛠 Admin Panel
+- **Dashboard:** General statistics and quick access.
+- **Gym & Service Management:** CRUD operations for gym details and service categories.
+- **Trainer Management:** Add trainers, upload photos, and assign specialization areas.
+- **Working Hours:** Weekly working schedule for trainers and conflict checking.
+- **Appointment Approval:** Approve or reject appointment requests from members.
 
-### 🔌 Teknik Özellikler
-- **Mimari:** ASP.NET Core MVC (.NET 9.0)
-- **Veritabanı:** MS SQL Server (Entity Framework Core Code-First)
-- **Yetkilendirme:** ASP.NET Core Identity (Role-Based: Admin, Member)
-- **API:** RESTful API endpoints (Swagger UI ile dokümante edilmiş)
-- **AI Entegrasyonu:** Google Gemini API (opsiyonel — API key olmadan mock modda çalışır)
-- **Güvenlik:** CSRF koruması, dosya yükleme validasyonu, XSS sanitizasyonu, hesap kilitleme
-- **Localization:** Türkçe (tr-TR) kültür desteği
+### 🔌 Technical Specifications
+- **Architecture:** ASP.NET Core MVC (.NET 9.0)
+- **Database:** MS SQL Server (Entity Framework Core Code-First)
+- **Authorization:** ASP.NET Core Identity (Role-Based: Admin, Member)
+- **API:** RESTful API endpoints (Documented with Swagger UI)
+- **AI Integration:** Google Gemini API (optional — runs in mock mode without API key)
+- **Security:** CSRF protection, file upload validation, XSS sanitization, account lockout
+- **Localization:** Turkish (tr-TR) culture support
 
 ---
 
-## ⚙️ Kurulum ve Çalıştırma
+## ⚙️ Installation and Execution
 
-### Gereksinimler
+### Prerequisites
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- SQL Server (LocalDB veya Full) — Visual Studio ile birlikte gelir
+- SQL Server (LocalDB or Full) — Comes with Visual Studio
 
-### 1. Projeyi Klonlayın
+### 1. Clone the Project
 ```bash
-git clone https://github.com/KULLANICI_ADI/FitHub.git
+git clone https://github.com/USERNAME/FitHub.git
 cd FitHub
 ```
 
-### 2. Veritabanını Oluşturun
+### 2. Create the Database
 ```bash
 cd FitnessApp.Web
 dotnet ef database update
 ```
-> Bu komut veritabanını otomatik oluşturur ve başlangıç verilerini (admin kullanıcısı, eğitmenler, hizmetler vb.) ekler.
+> This command automatically creates the database and adds seed data (admin user, trainers, services, etc.).
 
-### 3. (Opsiyonel) Gemini AI API Anahtarı Tanımlama
+### 3. (Optional) Define Gemini AI API Key
 
-Yapay Zeka Asistanı özelliğinin **gerçek AI** ile çalışması için Google Gemini API anahtarı gereklidir.  
-API anahtarı olmadan uygulama **mock (demo) modda** çalışır, hata vermez.
+A Google Gemini API key is required for the Smart Assistant feature to work with **real AI**.  
+Without an API key, the application works in **mock (demo) mode** and does not throw errors.
 
-API anahtarınız varsa aşağıdaki komutu çalıştırın:
+If you have an API key, run the following command:
 
 ```bash
 cd FitnessApp.Web
-dotnet user-secrets set "Gemini:ApiKey" "BURAYA_API_ANAHTARINIZI_YAZIN"
+dotnet user-secrets set "Gemini:ApiKey" "WRITE_YOUR_API_KEY_HERE"
 ```
 
-> 💡 **User Secrets nedir?** API anahtarınız bilgisayarınızda güvenli bir yerde saklanır, Git'e **asla** commit edilmez.  
-> API anahtarı almak için: [Google AI Studio](https://aistudio.google.com/apikey)
+> 💡 **What are User Secrets?** Your API key is stored safely on your computer and is **never** committed to Git.  
+> To get an API key: [Google AI Studio](https://aistudio.google.com/apikey)
 
-### 4. Projeyi Başlatın
+### 4. Run the Project
 ```bash
 dotnet run
 ```
-Tarayıcınızda gösterilen adrese gidin (genellikle `https://localhost:PORT`).
+Navigate to the address shown in your browser (usually `https://localhost:PORT`).
 
-> 📘 Swagger API dokümantasyonu: `/swagger` adresinde mevcuttur (sadece Development modunda).
+> 📘 Swagger API documentation: Available at `/swagger` (only in Development mode).
 
 ---
 
-## 🔑 Giriş Bilgileri
+## 🔑 Login Information
 
-| Rol | Email | Şifre |
-|-----|-------|-------|
+| Role | Email | Password |
+|------|-------|----------|
 | **Admin** | `admin@saufitness.com` | `Admin1234` |
-| **Üye** | Kayıt sayfasından yeni hesap oluşturabilirsiniz | — |
+| **Member** | You can create a new account from the registration page | — |
 
 ---
 
-## 📚 API Endpoint'leri
+## 📚 API Endpoints
 
-| Metot | Endpoint | Açıklama | Yetki |
-|-------|----------|----------|-------|
-| `GET` | `/api/Trainers` | Tüm eğitmen listesi | Auth gerekli |
-| `GET` | `/api/Trainers/filter?date=YYYY-MM-DD` | Tarihe göre müsait eğitmenler | Auth gerekli |
-| `GET` | `/api/Appointments/my-history` | Üyenin randevu geçmişi | Auth gerekli |
-
----
-
-## 🤖 Akıllı Asistan (AI)
-
-Üyeler, **Hesabım → Yapay Zeka Asistanı** menüsünden yaş, kilo, boy ve hedeflerini girerek kişiselleştirilmiş beslenme ve antrenman planı alabilirler.
-
-- **Gemini API anahtarı tanımlıysa:** Google Gemini AI ile gerçek zamanlı plan oluşturulur.
-- **API anahtarı yoksa:** Uygulama otomatik olarak demo/mock modda çalışır, hazır şablonlardan plan üretir.
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `GET` | `/api/Trainers` | List of all trainers | Auth required |
+| `GET` | `/api/Trainers/filter?date=YYYY-MM-DD` | Available trainers by date | Auth required |
+| `GET` | `/api/Appointments/my-history` | Member's appointment history | Auth required |
 
 ---
 
-## 📁 Proje Yapısı
+## 🤖 Smart Assistant (AI)
+
+Members can get a personalized nutrition and workout plan by entering their age, weight, height, and goals via the **My Account → AI Assistant** menu.
+
+- **If Gemini API key is defined:** Generates a real-time plan with Google Gemini AI.
+- **If no API key:** The application automatically runs in demo/mock mode, generating a plan from ready templates.
+
+---
+
+## 📁 Project Structure
 
 ```
 FitnessApp.Web/
-├── Areas/Admin/          # Admin paneli (Controller + View)
-├── Controllers/          # Ana controller'lar
-│   └── Api/              # RESTful API controller'ları
-├── Data/                 # Entity model'ler, DbContext, Seeder
-├── Migrations/           # EF Core migration dosyaları
-├── Services/             # İş mantığı servisleri (AI, Randevu)
-├── ViewModels/           # Form ve görünüm modelleri
-├── Views/                # Razor View dosyaları
-└── wwwroot/              # Statik dosyalar (CSS, JS, images)
+├── Areas/Admin/          # Admin panel (Controller + View)
+├── Controllers/          # Main controllers
+│   └── Api/              # RESTful API controllers
+├── Data/                 # Entity models, DbContext, Seeder
+├── Migrations/           # EF Core migration files
+├── Services/             # Business logic services (AI, Appointment)
+├── ViewModels/           # Form and view models
+├── Views/                # Razor View files
+└── wwwroot/              # Static files (CSS, JS, images)
 ```
